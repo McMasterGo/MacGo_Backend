@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "MacGO": {
+            "applicationId": "nTERmyCRrA1y3B8LhGQiXP38lx8wu2Mrdtpppwhr", 
+            "masterKey": "h6k4yMW60yvY0fKCzh5KFTFYdclU1oe55OjLKtlz"
+        }, 
+        "_default": {
+            "link": "MacGO"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.3.1"
+    }
+}
