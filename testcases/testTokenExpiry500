@@ -1,3 +1,5 @@
+#Function creates 500 tokens, waits 2 minutes and then prints out the number of active tokens
+
 import json,httplib
 import time
 
@@ -22,12 +24,4 @@ connection.request('POST', '/1/functions/getActiveTokens', json.dumps({
        "Content-Type": "application/json"
      })
 result = json.loads(connection.getresponse().read())
-print result connection.request('POST', '/1/functions/getActiveTokens ', json.dumps({
-       "user": "SU2UQoi9QY"
-     }), {
-       "X-Parse-Application-Id": "nTERmyCRrA1y3B8LhGQiXP38lx8wu2Mrdtpppwhr",
-       "X-Parse-REST-API-Key": "1Az1TpnkQqOue9tupaH9jyJNnP5OEoOLfBDBeoXd",
-       "Content-Type": "application/json"
-     })
-result = json.loads(connection.getresponse().read())
-print result
+print result 
