@@ -197,7 +197,7 @@ Parse.Cloud.define("getTotalCost", function(request, response) {
 });
 	
 
-//Function that gets how much money a user has used for each category
+//Function that gets how much money a user has used for each category (Returns percentage)
 Parse.Cloud.define("getStats", function(request, response) {
 	
 	var totalCost = 0;
@@ -285,7 +285,8 @@ Parse.Cloud.define("getStats", function(request, response) {
 
 });
  
-//Function that gets how much calories a user has used per category
+//Function that gets how much calories a user has used per category (returns percentage)
+
 Parse.Cloud.define("getCaloriesStats", function(request, response) {
 	
 	var totalCost = 0;
@@ -346,6 +347,87 @@ Parse.Cloud.define("getCaloriesStats", function(request, response) {
 			FastFoodCost = (parseFloat((FastFoodCost/totalCost)*100)).toFixed(2);
 			FruitsCost = (parseFloat((FruitsCost/totalCost)*100)).toFixed(2);
 			BeverageCost = (parseFloat((BeverageCost/totalCost)*100)).toFixed(2);
+			
+			
+			stats = {"Candy":CandyCost, 
+					"Junk":FastFoodCost, 
+					"Fruit":FruitsCost, 
+					"Beverage":BeverageCost};
+			
+			response.success(stats);
+			
+				
+	},
+	error: function(error) {
+		response.error("");
+	}
+	});	
+	
+
+});
+
+
+//Function that gets how much calories a user has used per category  
+Parse.Cloud.define("getCaloriesCount", function(request, response) {
+	
+	var totalCost = 0;
+	var CandyCost = 0;
+	var FastFoodCost = 0; 
+	var FruitsCost = 0;
+	var BeverageCost = 0;
+	var category; 
+	var stats;
+	
+	// Parse.User.current()
+	var userId = request.params.userId;
+	
+	//Finds current user	
+	var User = Parse.Object.extend("_User");
+	var user = new Parse.Query(User);
+	user.equalTo("objectId", userId);
+	
+	//Finds all purchases that user has made 
+	var Purchase = Parse.Object.extend("Purchase");
+	var purchases = new Parse.Query(Purchase);
+	purchases.matchesQuery("user", user);
+
+	//Matches purchases with Item
+	var PurchaseItem  = Parse.Object.extend("PurchaseItem");
+	var purchaseItem = new Parse.Query(PurchaseItem);
+	var Itempurchase = new Parse.Query(PurchaseItem);
+	
+	purchaseItem.matchesQuery("purchase", purchases);
+	purchaseItem.include('item');
+	
+	var items; 
+	
+	purchaseItem.find({
+	success: function(itemPurchased) {
+			
+			for (var i = 0; i < itemPurchased.length; ++i) {
+				items = itemPurchased[i].get("item");
+				category = items.get("category");
+				totalCost = totalCost + items.get("calories"); 
+				
+				//candy
+				if (category.id == "DvJkBBefcP"){
+					CandyCost = CandyCost + items.get("calories"); 
+				} //Fast Food
+				 else if (category.id == "mfBDpVPm5A") { 
+				  FastFoodCost = FastFoodCost + items.get("calories");
+				} //Fruits
+				 else if (category.id == "Y3ugfaVABS") {
+					FruitsCost  = FruitsCost + items.get("calories");
+				} 
+				 else {
+				  BeverageCost = BeverageCost + items.get("calories");
+				}
+			}
+			
+			CandyCost = parseFloat(CandyCost).toFixed(2);
+			FastFoodCost = parseFloat(FastFoodCost).toFixed(2);
+			FruitsCost = parseFloat(FruitsCost).toFixed(2);
+			BeverageCost = parseFloat(BeverageCost).toFixed(2);
 			
 			
 			stats = {"Candy":CandyCost, 
