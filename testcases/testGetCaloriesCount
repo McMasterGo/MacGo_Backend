@@ -1,0 +1,20 @@
+#Get total amount of calories per category
+
+import json,httplib
+import time
+
+connection = httplib.HTTPSConnection('api.parse.com', 443)
+connection.connect()
+
+connection.request('POST', '/1/functions/getCaloriesCount', json.dumps({
+        #Change username below
+        #Current user is Simon Quach
+        "userId" : "SU2UQoi9QY"
+     }), {
+       "X-Parse-Application-Id": "nTERmyCRrA1y3B8LhGQiXP38lx8wu2Mrdtpppwhr",
+       "X-Parse-REST-API-Key": "1Az1TpnkQqOue9tupaH9jyJNnP5OEoOLfBDBeoXd",
+       "Content-Type": "application/json"
+     })
+result = json.loads(connection.getresponse().read())
+print result
+
